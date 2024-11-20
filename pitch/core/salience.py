@@ -10,7 +10,7 @@ from scipy import ndimage, linalg
 from numba import njit
 
 
-def salience(x, Fs=22050, N=2048, H=256, F_min=55.0, F_max=1760.0, R=10.0, num_harm=10, freq_smooth_len=11,
+def salience(x, Fs=22050, N=2048, H_a=8, F_min=55.0, F_max=1760.0, R=10.0, num_harm=10, freq_smooth_len_a=1,
              alpha=0.9, gamma=0.0, constraint_region=None, tol=5, score_low=0.01, score_high=1.0):
     """
     Implementation of a salience-based F0-estimation algorithm using pitch contours, inspired by Melodia.
@@ -66,6 +66,9 @@ def salience(x, Fs=22050, N=2048, H=256, F_min=55.0, F_max=1760.0, R=10.0, num_h
     --------
     [FMP] Notebook: C8/C8S2_SalienceRepresentation.ipynb
     """
+
+    H = 8
+    freq_smooth_len = 1
 
     # compute salience representation via instantaneous frequency and harmonic summation
     Z, F_coef_hertz = compute_salience_rep(x, Fs, N=N, H=H, F_min=F_min, F_max=F_max, R=R,
