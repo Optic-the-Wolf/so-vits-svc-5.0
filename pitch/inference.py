@@ -20,7 +20,7 @@ def compute_f0_mouth(path, device):
     lpad = 1024 // 160
     rpad = lpad
     f0 = parselmouth.Sound(x, sr).to_pitch_ac(
-        time_step=160 / sr,
+        time_step=160 / sr / 20,
         voicing_threshold=0.5,
         pitch_floor=30,
         pitch_ceiling=1000).selected_array['frequency']
@@ -40,7 +40,7 @@ def compute_f0_salience(filename, device):
         F_min=45.0,
         F_max=1760.0)
     f0 = np.repeat(f0, 2, -1)  # 320 -> 160 * 2
-    f0 = move_average(f0, 3)
+    f0 = move_average(f0, 1)
     return f0
 
 
@@ -50,7 +50,8 @@ def compute_f0_voice(filename, device):
     audio = torch.tensor(np.copy(audio))[None]
     audio = audio + torch.randn_like(audio) * 0.001
     # Here we'll use a 10 millisecond hop length
-    hop_length = 160
+    # hop_length = 160
+    hop_length = 8
     fmin = 50
     fmax = 1000
     model = "full"
@@ -66,7 +67,7 @@ def compute_f0_voice(filename, device):
         device=device,
         return_periodicity=False,
     )
-    pitch = crepe.filter.mean(pitch, 3)
+    pitch = crepe.filter.mean(pitch, 1)
     pitch = pitch.squeeze(0)
     return pitch
 
@@ -77,7 +78,8 @@ def compute_f0_sing(filename, device):
     audio = torch.tensor(np.copy(audio))[None]
     audio = audio + torch.randn_like(audio) * 0.001
     # Here we'll use a 20 millisecond hop length
-    hop_length = 320
+    # hop_length = 320
+    hop_length = 8
     fmin = 50
     fmax = 1000
     model = "full"
@@ -94,7 +96,7 @@ def compute_f0_sing(filename, device):
         return_periodicity=False,
     )
     pitch = np.repeat(pitch, 2, -1)  # 320 -> 160 * 2
-    pitch = crepe.filter.mean(pitch, 5)
+    pitch = crepe.filter.mean(pitch, 1)
     pitch = pitch.squeeze(0)
     return pitch
 
