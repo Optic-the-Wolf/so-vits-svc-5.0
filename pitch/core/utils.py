@@ -7,7 +7,7 @@
 import numpy as np
 
 
-def sonify_trajectory_with_sinusoid(f0, t, audio_len, confidence=None, Fs=22050, smooth_len=11):
+def sonify_trajectory_with_sinusoid(f0, t, audio_len, confidence=None, Fs=22050, smooth_len_a=1):
     """
     Sonification of trajectory with sinusoidal. Adapted from FMP notebook: C8/C8S2_FundFreqTracking.ipynb
 
@@ -31,6 +31,8 @@ def sonify_trajectory_with_sinusoid(f0, t, audio_len, confidence=None, Fs=22050,
     x_soni : ndarray
         Sonified F0-trajectory
     """
+    smooth_len = 1
+
     if confidence is None:
         confidence = np.ones_like(f0)
 
